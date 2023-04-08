@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     digitalocean = {
-      source = "digitalocean/digitalocean"
+      source  = "digitalocean/digitalocean"
       version = "~> 2.0"
     }
   }
@@ -19,12 +19,13 @@ resource "digitalocean_kubernetes_cluster" "cluster" {
     auto_scale = var.auto_scale
     min_nodes  = var.min_nodes
     max_nodes  = var.max_nodes
-    tags = var.tags
+    vpc_uuid   = var.vpc_id
+    tags       = var.tags
   }
 }
 
 # get the data to export for use in other modules (like deploying the operators)
 data "digitalocean_kubernetes_cluster" "cluster_data" {
-  name = var.cluster_name
+  name       = var.cluster_name
   depends_on = [digitalocean_kubernetes_cluster.cluster]
 }

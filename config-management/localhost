@@ -1,0 +1,9 @@
+localhost
+
+[nats-servers]
+192.168.64.2
+
+[all:vars]
+ansible_user=ubuntu
+ansible_become=yes
+ansible_become_method=sudo

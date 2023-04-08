@@ -1,0 +1,4 @@
+# Install from Ansible Galaxy
+- src: artis3n.tailscale
+- src: andrewrothstein.nats_server
+- src: community.sops 

@@ -1,0 +1,52 @@
+---
+- name: Load Encrypted Credentials
+  community.sops.load_vars:
+    file: ../../../../secrets.sops.yml
+
+- name: Create Group
+  group:
+    name: nats
+    state: present
+
+- name: Create Users Task
+  user:
+    name: nats
+    state: present
+    password: "{{ nats_user_password | password_hash('sha512','A512') }}"
+    shell: /bin/bash
+    group: nats
+
+- name: Install Nats Server
+  include_role:
+    name: andrewrothstein.nats_server
+
+- name: Create nats unit file
+  template:
+    src: nats-server.service
+    dest: /lib/systemd/system/nats-server.service
+    mode: '0644'
+  notify: reload systemd
+
+- name: Create a Nats directory
+  file:
+    path: "/etc/nats-server"
+    state: directory
+    owner: nats
+    group: nats
+    mode: '0775'
+
+- name: Copy Nats config
+  template:
+    src: nats-server.conf
+    dest: /etc/nats-server/nats-server.conf
+    owner: nats
+    group: nats
+    mode: '0644'
+  notify: restart nats-server
+
+- name: Start service Nats, if not started
+  service:
+    name: nats-server
+    state: started
+    enabled: yes
+

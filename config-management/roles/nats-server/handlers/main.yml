@@ -1,0 +1,5 @@
+- name: restart nats-server
+  command: /usr/local/nats-server/nats-server --signal reload
+
+- name: reload systemd
+  command: systemctl daemon-reload

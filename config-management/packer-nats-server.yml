@@ -1,0 +1,16 @@
+---
+- hosts: all
+  roles:
+    - nats-server
+
+  - name: Load encrypted credentials
+    community.sops.load_vars:
+      file: ../secrets.sops.yml
+
+# You can't register the tailscale nodes until after the image comes up. So this
+# installs Tailscale, but doesn't register it. 
+- name: Install Tailscale
+  include_role:
+    name: artis3n.tailscale
+  vars:
+    tailscale_up_skip: true

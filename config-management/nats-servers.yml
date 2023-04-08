@@ -1,0 +1,5 @@
+---
+- hosts: nats-servers
+  roles:
+    - common
+    - nats-server
